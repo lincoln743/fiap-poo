@@ -8,21 +8,24 @@ public class SistemaPrincipal {
     public static void main(String[] args) {
         // INSTANCIAÇÃO
         // O comando 'new' aloca memória para um novo objeto.
+        Carro meuCarro = new Carro("Volkswagen", "Gol", 2022);
 
-        // Fabriquei o primeiro (Instância 1)
-        Carro meuCarro = new Carro();
-        meuCarro.marca = "Volkswagen";
-        meuCarro.modelo = "Gol";
-        meuCarro.ano = 2022;
+        System.out.println("--- Sistema FiapCarro ---");
+        System.out.println("Carro: " + meuCarro.marca + " " + meuCarro.modelo
+                + " | Ano: " + meuCarro.ano
+                + " | Velocidade inicial: " + meuCarro.velocidade + " km/h");
 
-        // Fabriquei o segundo (Instância 2)
-        Carro carroDoProfessor = new Carro();
-        carroDoProfessor.marca = "Fiat";
-        carroDoProfessor.modelo = "Uno";
-        carroDoProfessor.ano = 2018;
+        // Testes com valores VÁLIDOS
+        System.out.println("\n[Testes válidos]");
+        meuCarro.acelerar(40);   // 0  -> 40
+        meuCarro.acelerar(30);   // 40 -> 70
+        meuCarro.frear(20);      // 70 -> 50
 
-        // Exibindo os dados no Console
-        System.out.println("Meu carro é: " + meuCarro.marca + " " + meuCarro.modelo);
-        System.out.println("O do professor é: " + carroDoProfessor.marca + " " + carroDoProfessor.modelo);
+        // Testes com valores INVÁLIDOS (regras de negócio devem barrar)
+        System.out.println("\n[Testes inválidos]");
+        meuCarro.acelerar(-10);  // valor negativo -> erro
+        meuCarro.frear(0);       // zero -> erro
+        meuCarro.frear(999);     // reduz demais -> trava em 0, não fica negativo
+        meuCarro.acelerar(500);  // ultrapassaria o limite -> trava em 200
     }
 }
