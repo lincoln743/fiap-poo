@@ -1,31 +1,36 @@
 package br.com.fiapcarro.main;
 
-// Importamos a classe Carro para que o sistema a reconheça
 import br.com.fiapcarro.model.Carro;
 
 public class SistemaPrincipal {
 
     public static void main(String[] args) {
-        // INSTANCIAÇÃO
-        // O comando 'new' aloca memória para um novo objeto.
         Carro meuCarro = new Carro("Volkswagen", "Gol", 2022);
 
-        System.out.println("--- Sistema FiapCarro ---");
-        System.out.println("Carro: " + meuCarro.marca + " " + meuCarro.modelo
-                + " | Ano: " + meuCarro.ano
-                + " | Velocidade inicial: " + meuCarro.velocidade + " km/h");
+        System.out.println("--- Sistema FiapCarro (Aula 3: Encapsulamento) ---");
+        // Atributos agora são private: o acesso é só via get/set
+        System.out.println("Carro: " + meuCarro.getMarca() + " " + meuCarro.getModelo()
+                + " | Ano: " + meuCarro.getAno()
+                + " | Velocidade: " + meuCarro.getVelocidade() + " km/h");
 
-        // Testes com valores VÁLIDOS
-        System.out.println("\n[Testes válidos]");
-        meuCarro.acelerar(40);   // 0  -> 40
-        meuCarro.acelerar(30);   // 40 -> 70
-        meuCarro.frear(20);      // 70 -> 50
+        // PROVA DO ENCAPSULAMENTO (proteção em tempo de compilação):
+        // a linha abaixo NÃO compila mais, porque 'velocidade' é private.
+        // meuCarro.velocidade = 300;
 
-        // Testes com valores INVÁLIDOS (regras de negócio devem barrar)
-        System.out.println("\n[Testes inválidos]");
-        meuCarro.acelerar(-10);  // valor negativo -> erro
-        meuCarro.frear(0);       // zero -> erro
-        meuCarro.frear(999);     // reduz demais -> trava em 0, não fica negativo
-        meuCarro.acelerar(500);  // ultrapassaria o limite -> trava em 200
+        // Tentando BURLAR o sistema pelo setter protegido
+        System.out.println("\n[Tentando burlar a regra do setVelocidade]");
+        meuCarro.setVelocidade(300);   // acima da máxima -> recusado
+        meuCarro.setVelocidade(-50);   // negativo -> recusado
+        System.out.println("Velocidade após tentativas inválidas: "
+                + meuCarro.getVelocidade() + " km/h (continua 0 -> protegido)");
+
+        // Valor válido pelo setter
+        System.out.println("\n[Valor válido]");
+        meuCarro.setVelocidade(80);    // dentro do intervalo -> aceito
+
+        // Comportamentos continuam funcionando
+        System.out.println("\n[Comportamentos]");
+        meuCarro.acelerar(50);         // 80 -> 130
+        meuCarro.frear(200);           // trava em 0, não fica negativo
     }
 }
