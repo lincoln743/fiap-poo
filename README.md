@@ -4,52 +4,44 @@ Projeto incremental de Programação Orientada a Objetos — paralelo ao **FiapR
 
 ## O que o objeto representa
 
-A classe `Carro` modela um carro no mundo real: guarda suas características (o que ele **é** e **tem**) e define comportamentos que alteram o seu estado (o que ele **faz**), sempre protegendo esse estado contra valores inválidos.
+A classe `Carro` modela um carro no mundo real: nasce com dados obrigatórios (marca, modelo e ano), mantém o estado protegido e só muda de velocidade através de comportamentos controlados.
 
 ## Estrutura da classe
 
-Atributos — todos `private` (encapsulamento, Aula 3):
+Atributos — todos `private` (encapsulamento):
 
-| Atributo     | Tipo     | Descrição                                    |
-|--------------|----------|----------------------------------------------|
-| `marca`      | `String` | Fabricante do carro (ex.: Volkswagen)        |
-| `modelo`     | `String` | Modelo do carro (ex.: Gol)                   |
-| `ano`        | `int`    | Ano de fabricação                            |
-| `velocidade` | `int`    | Estado atual em km/h (todo carro nasce em 0) |
+| Atributo     | Tipo     | Descrição                                    | Muda depois do nascimento? |
+|--------------|----------|----------------------------------------------|----------------------------|
+| `marca`      | `String` | Fabricante do carro (ex.: Volkswagen)        | Não (imutável)             |
+| `modelo`     | `String` | Modelo do carro (ex.: Gol)                   | Não (imutável)             |
+| `ano`        | `int`    | Ano de fabricação                            | Não (imutável)             |
+| `velocidade` | `int`    | Estado atual em km/h (nasce em 0)            | Sim, via `acelerar`/`frear`|
 
-Como os atributos são privados, o acesso de fora só acontece pelos métodos `get` (ler) e `set` (alterar).
+## Construtor (o "cartório")
+
+`Carro(String marca, String modelo, int ano)` — executado uma única vez, no `new`. Obriga o carro a nascer com os três dados essenciais e válidos. A validação de cada um acontece em **setters privados** chamados dentro do construtor.
+
+```java
+Carro meuCarro = new Carro("Volkswagen", "Gol", 2022); // correto
+
+// Carro fantasma = new Carro();  // NÃO COMPILA: o construtor vazio deixa de existir
+```
+
+Regras de nascimento:
+- `marca` e `modelo` não podem ser nulos nem vazios.
+- `ano` deve estar entre 1886 (primeiro automóvel) e o ano seguinte ao atual.
 
 ## Métodos
 
-Comportamentos (Aula 2):
+Comportamentos (mudam a velocidade, com regra de negócio):
+- `acelerar(int incremento)` — aumenta a velocidade, sem passar do limite (`VELOCIDADE_MAXIMA = 200`).
+- `frear(int reducao)` — reduz a velocidade, sem ficar negativa.
 
-- `acelerar(int incremento)` — aumenta a velocidade (respeita o limite máximo).
-- `frear(int reducao)` — reduz a velocidade (nunca fica negativa).
+Getters (apenas leitura): `getMarca()`, `getModelo()`, `getAno()`, `getVelocidade()`.
 
-Getters e setters (Aula 3):
+## Por que não há setters públicos para marca, modelo e ano?
 
-- `getMarca()` / `setMarca(String)`
-- `getModelo()` / `setModelo(String)`
-- `getAno()` / `setAno(int)`
-- `getVelocidade()` / `setVelocidade(int)`
-
-## Regra especial de proteção
-
-`setVelocidade(int velocidade)` só aceita valores entre `0` e `VELOCIDADE_MAXIMA` (200 km/h). Qualquer valor fora desse intervalo é recusado e o estado **não muda** — o objeto se mantém sempre válido.
-
-```java
-Carro meuCarro = new Carro("Volkswagen", "Gol", 2022);
-
-meuCarro.setVelocidade(300); // Recusado: fora do intervalo (0..200)
-meuCarro.setVelocidade(-50); // Recusado: negativo
-meuCarro.setVelocidade(80);  // Aceito
-
-// meuCarro.velocidade = 300; // NÃO COMPILA: 'velocidade' é private
-```
-
-## Por que encapsular?
-
-Com os atributos `private`, ninguém consegue fazer `carro.velocidade = 300` direto e deixar o objeto num estado impossível. Toda alteração passa obrigatoriamente pelos setters, onde a regra de negócio mora — a validação fica em um único lugar e o objeto nunca fica inconsistente.
+Porque, no mundo real, esses dados não mudam: um Gol não vira Corolla, e o ano de fabricação é fixo. Gerar "getters e setters para tudo" automaticamente abriria brechas para deixar o objeto inconsistente. Aqui, os setters de validação são `private` e só o construtor os usa — a única forma de mudar o estado depois do nascimento é a velocidade, e só pelos comportamentos `acelerar`/`frear`.
 
 ## Como executar
 
@@ -59,8 +51,7 @@ Abra o projeto no Eclipse e rode `SistemaPrincipal` (`Run As` → `Java Applicat
 
 ```
 FiapCarro/
-├── Carro.asta                (modelo UML — salvo pelo Astah)
-├── Carro.xmi                 (modelo UML para importar no Astah)
+├── Carro.asta                (modelo UML — feito no Astah)
 └── src/
     ├── module-info.java
     └── br/com/fiapcarro/

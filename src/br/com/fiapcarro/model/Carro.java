@@ -1,10 +1,15 @@
 package br.com.fiapcarro.model;
 
-// Aula 3: Encapsulamento.
-// Os atributos agora são 'private'. Ninguém de fora acessa direto:
-// só através dos métodos get (ler) e set (alterar, com regras).
+import java.time.Year;
+
+// Aula 4: Construtores.
+// O construtor é o "cartório": obriga o carro a nascer com os dados
+// essenciais e válidos. Os atributos são private (encapsulamento) e, como
+// marca/modelo/ano NÃO mudam na vida real (um Gol não vira Corolla), não
+// expomos setters públicos para eles — a validação fica em setters privados,
+// usados apenas no momento do nascimento.
 public class Carro {
-    // Atributos (agora protegidos com 'private')
+    // Atributos (sempre privados)
     private String marca;
     private String modelo;
     private int ano;
@@ -13,15 +18,18 @@ public class Carro {
     // Velocidade máxima permitida para este carro (km/h)
     public static final int VELOCIDADE_MAXIMA = 200;
 
-    // Construtor: todo carro nasce parado (velocidade = 0)
+    // CONSTRUTOR (o cartório): sem marca, modelo e ano, o carro não nasce.
     public Carro(String marca, String modelo, int ano) {
-        this.marca = marca;
-        this.modelo = modelo;
-        this.ano = ano;
-        this.velocidade = 0;
+        // Validamos cada dado essencial no nascimento, via setters privados.
+        this.setMarca(marca);
+        this.setModelo(modelo);
+        this.setAno(ano);
+        this.velocidade = 0; // todo carro nasce parado
+        System.out.println("Registro inicial: " + this.marca + " " + this.modelo
+                + " (" + this.ano + ") nasceu no sistema.");
     }
 
-    // ---------- Comportamentos (Aula 2) ----------
+    // ---------- Comportamentos (alteram o estado 'velocidade') ----------
 
     public void acelerar(int incremento) {
         if (incremento <= 0) {
@@ -49,45 +57,50 @@ public class Carro {
         System.out.println("Freando. Velocidade atual: " + this.velocidade + " km/h.");
     }
 
-    // ---------- Getters e Setters (Aula 3) ----------
+    // ---------- Getters (apenas leitura) ----------
 
     public String getMarca() {
         return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
     }
 
     public String getModelo() {
         return modelo;
     }
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
     public int getAno() {
         return ano;
-    }
-
-    public void setAno(int ano) {
-        this.ano = ano;
     }
 
     public int getVelocidade() {
         return velocidade;
     }
 
-    // REGRA ESPECIAL: a velocidade só aceita valores entre 0 e a máxima.
-    // Qualquer valor fora do intervalo é recusado e o estado não muda.
-    public void setVelocidade(int velocidade) {
-        if (velocidade < 0 || velocidade > VELOCIDADE_MAXIMA) {
-            System.out.println("Erro: velocidade deve estar entre 0 e " + VELOCIDADE_MAXIMA
-                    + " km/h. Valor recusado: " + velocidade + ".");
-            return; // não altera o estado -> objeto protegido
+    // ---------- Setters PRIVADOS (engrenagem interna de validação) ----------
+    // São private porque marca, modelo e ano não mudam depois do nascimento.
+    // Só o construtor os usa, para garantir que o carro nasça consistente.
+
+    private void setMarca(String marca) {
+        if (marca == null || marca.trim().isEmpty()) {
+            System.out.println("Erro de validação: a marca é obrigatória.");
+            return;
         }
-        this.velocidade = velocidade;
-        System.out.println("Velocidade ajustada para " + this.velocidade + " km/h.");
+        this.marca = marca;
+    }
+
+    private void setModelo(String modelo) {
+        if (modelo == null || modelo.trim().isEmpty()) {
+            System.out.println("Erro de validação: o modelo é obrigatório.");
+            return;
+        }
+        this.modelo = modelo;
+    }
+
+    private void setAno(int ano) {
+        int anoMaximo = Year.now().getValue() + 1;
+        if (ano < 1886 || ano > anoMaximo) {
+            System.out.println("Erro de validação: ano deve estar entre 1886 e " + anoMaximo + ".");
+            return;
+        }
+        this.ano = ano;
     }
 }
