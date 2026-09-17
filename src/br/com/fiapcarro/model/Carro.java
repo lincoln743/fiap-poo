@@ -2,28 +2,28 @@ package br.com.fiapcarro.model;
 
 import java.time.Year;
 
-// Aula 4: Construtores.
-// O construtor é o "cartório": obriga o carro a nascer com os dados
-// essenciais e válidos. Os atributos são private (encapsulamento) e, como
-// marca/modelo/ano NÃO mudam na vida real (um Gol não vira Corolla), não
-// expomos setters públicos para eles — a validação fica em setters privados,
-// usados apenas no momento do nascimento.
+// Aula 5: Associação ("Tem-Um" / HAS-A).
+// Além dos dados simples, o Carro TEM UM Motor: guarda outro objeto dentro dele.
 public class Carro {
-    // Atributos (sempre privados)
+    // Atributos simples (sempre privados)
     private String marca;
     private String modelo;
     private int ano;
     private int velocidade; // Estado atual em km/h
 
+    // Atributo de ASSOCIAÇÃO (objeto complexo).
+    // Clean Code: o nome da variável indica o PAPEL do objeto dentro do Carro.
+    private Motor motor;
+
     // Velocidade máxima permitida para este carro (km/h)
     public static final int VELOCIDADE_MAXIMA = 200;
 
-    // CONSTRUTOR (o cartório): sem marca, modelo e ano, o carro não nasce.
-    public Carro(String marca, String modelo, int ano) {
-        // Validamos cada dado essencial no nascimento, via setters privados.
+    // CONSTRUTOR: o carro só nasce com marca, modelo, ano e um Motor.
+    public Carro(String marca, String modelo, int ano, Motor motor) {
         this.setMarca(marca);
         this.setModelo(modelo);
         this.setAno(ano);
+        this.motor = motor; // recebe o objeto inteiro (passagem por referência)
         this.velocidade = 0; // todo carro nasce parado
         System.out.println("Registro inicial: " + this.marca + " " + this.modelo
                 + " (" + this.ano + ") nasceu no sistema.");
@@ -75,9 +75,12 @@ public class Carro {
         return velocidade;
     }
 
+    // Getter do objeto associado: permite navegar do Carro até o Motor.
+    public Motor getMotor() {
+        return motor;
+    }
+
     // ---------- Setters PRIVADOS (engrenagem interna de validação) ----------
-    // São private porque marca, modelo e ano não mudam depois do nascimento.
-    // Só o construtor os usa, para garantir que o carro nasça consistente.
 
     private void setMarca(String marca) {
         if (marca == null || marca.trim().isEmpty()) {

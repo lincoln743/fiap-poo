@@ -1,47 +1,35 @@
-# FiapCarro
-
-Projeto incremental de Programação Orientada a Objetos — paralelo ao **FiapRide**, aplicando os conceitos das aulas ao objeto **Carro**.
-
-## O que o objeto representa
-
-A classe `Carro` modela um carro no mundo real: nasce com dados obrigatórios (marca, modelo e ano), mantém o estado protegido e só muda de velocidade através de comportamentos controlados.
-
 ## Estrutura da classe
 
 Atributos — todos `private` (encapsulamento):
 
-| Atributo     | Tipo     | Descrição                                    | Muda depois do nascimento? |
-|--------------|----------|----------------------------------------------|----------------------------|
-| `marca`      | `String` | Fabricante do carro (ex.: Volkswagen)        | Não (imutável)             |
-| `modelo`     | `String` | Modelo do carro (ex.: Gol)                   | Não (imutável)             |
-| `ano`        | `int`    | Ano de fabricação                            | Não (imutável)             |
-| `velocidade` | `int`    | Estado atual em km/h (nasce em 0)            | Sim, via `acelerar`/`frear`|
+| Atributo     | Tipo     | Descrição                                         |
+|--------------|----------|---------------------------------------------------|
+| `marca`      | `String` | Fabricante (imutável)                             |
+| `modelo`     | `String` | Modelo (imutável)                                 |
+| `ano`        | `int`    | Ano de fabricação (imutável)                      |
+| `velocidade` | `int`    | Estado atual em km/h (nasce em 0)                 |
+| `motor`      | `Motor`  | Associação: o Carro **TEM UM** Motor              |
 
-## Construtor (o "cartório")
+## Associação: o Carro TEM UM Motor (Aula 5)
 
-`Carro(String marca, String modelo, int ano)` — executado uma única vez, no `new`. Obriga o carro a nascer com os três dados essenciais e válidos. A validação de cada um acontece em **setters privados** chamados dentro do construtor.
+Em vez de guardar só tipos simples, o `Carro` guarda outro objeto — um `Motor`, que tem seus próprios dados (`potencia`, `combustivel`) e comportamento (`ligar()`). O nome do atributo (`motor`) indica o papel que o objeto desempenha dentro do carro.
 
 ```java
-Carro meuCarro = new Carro("Volkswagen", "Gol", 2022); // correto
+Motor motorFlex = new Motor(110, "Flex");
+Carro meuCarro = new Carro("Volkswagen", "Gol", 2022, motorFlex);
 
-// Carro fantasma = new Carro();  // NÃO COMPILA: o construtor vazio deixa de existir
+// Navegando do Carro até o Motor:
+meuCarro.getMotor().getPotencia();   // 110
+meuCarro.getMotor().ligar();          // Motor Flex de 110 cv ligado.
 ```
 
-Regras de nascimento:
-- `marca` e `modelo` não podem ser nulos nem vazios.
-- `ano` deve estar entre 1886 (primeiro automóvel) e o ano seguinte ao atual.
+## Por que passar o objeto inteiro (e não só uma String)?
 
-## Métodos
+Se o `Carro` guardasse apenas `"110 cv Flex"` como texto, ele teria a informação, mas não conseguiria **agir** sobre o motor (ligar, no futuro consultar consumo, trocar estado). Passando o objeto `Motor` inteiro, o carro acessa tanto os dados quanto os comportamentos — e qualquer mudança no motor é enxergada pelo carro, porque ambos apontam para o mesmo objeto na memória (passagem por referência).
 
-Comportamentos (mudam a velocidade, com regra de negócio):
-- `acelerar(int incremento)` — aumenta a velocidade, sem passar do limite (`VELOCIDADE_MAXIMA = 200`).
-- `frear(int reducao)` — reduz a velocidade, sem ficar negativa.
+## Construtor
 
-Getters (apenas leitura): `getMarca()`, `getModelo()`, `getAno()`, `getVelocidade()`.
-
-## Por que não há setters públicos para marca, modelo e ano?
-
-Porque, no mundo real, esses dados não mudam: um Gol não vira Corolla, e o ano de fabricação é fixo. Gerar "getters e setters para tudo" automaticamente abriria brechas para deixar o objeto inconsistente. Aqui, os setters de validação são `private` e só o construtor os usa — a única forma de mudar o estado depois do nascimento é a velocidade, e só pelos comportamentos `acelerar`/`frear`.
+`Carro(String marca, String modelo, int ano, Motor motor)` — o carro só nasce com os quatro dados. (Isso passa do limite ideal de 3 parâmetros do Clean Code; num projeto maior, o padrão Builder resolveria isso — assunto de aulas futuras.)
 
 ## Como executar
 
@@ -56,5 +44,6 @@ FiapCarro/
     ├── module-info.java
     └── br/com/fiapcarro/
         ├── model/Carro.java
+        ├── model/Motor.java
         └── main/SistemaPrincipal.java
 ```

@@ -1,26 +1,30 @@
 package br.com.fiapcarro.main;
 
+// Importe TODAS as classes necessárias
 import br.com.fiapcarro.model.Carro;
+import br.com.fiapcarro.model.Motor;
 
 public class SistemaPrincipal {
 
     public static void main(String[] args) {
-        // TESTE 1: A forma correta (nascimento legalizado)
-        Carro meuCarro = new Carro("Volkswagen", "Gol", 2022);
+        System.out.println("--- FiapCarro: Inicializando ---");
 
-        // TESTE 2: Tentando burlar o sistema (descomente a linha abaixo)
-        // Carro carroFantasma = new Carro();
-        // ERRO DE COMPILAÇÃO: "The constructor Carro() is undefined".
-        // Ao definir um construtor com regras, o Java remove o construtor vazio
-        // padrão. Você é OBRIGADO a informar marca, modelo e ano.
+        // 1. Criamos primeiro o objeto associado (o "ator" independente)
+        Motor motorFlex = new Motor(110, "Flex");
 
-        System.out.println("\nDados do carro:");
-        System.out.println("Marca: " + meuCarro.getMarca());
-        System.out.println("Modelo: " + meuCarro.getModelo());
-        System.out.println("Ano: " + meuCarro.getAno());
-        System.out.println("Velocidade: " + meuCarro.getVelocidade() + " km/h");
+        // 2. Criamos o Carro, ASSOCIANDO o Motor a ele
+        Carro meuCarro = new Carro("Volkswagen", "Gol", 2022, motorFlex);
 
-        // Comportamentos continuam funcionando normalmente
+        // 3. A mágica: navegamos do Carro -> Motor -> dados do Motor
+        System.out.println("\n--- Ficha do carro ---");
+        System.out.println("Modelo: " + meuCarro.getMarca() + " " + meuCarro.getModelo());
+        System.out.println("Potência: " + meuCarro.getMotor().getPotencia() + " cv");
+        System.out.println("Combustível: " + meuCarro.getMotor().getCombustivel());
+
+        // 4. Também acessamos o COMPORTAMENTO do objeto associado
+        meuCarro.getMotor().ligar();
+
+        // Comportamentos do próprio Carro continuam funcionando
         System.out.println("\n[Comportamentos]");
         meuCarro.acelerar(60);
         meuCarro.frear(20);
