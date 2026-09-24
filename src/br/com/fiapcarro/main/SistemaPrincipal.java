@@ -1,32 +1,34 @@
 package br.com.fiapcarro.main;
 
 // Importe TODAS as classes necessárias
-import br.com.fiapcarro.model.Carro;
+import br.com.fiapcarro.model.CarroEletrico;
+import br.com.fiapcarro.model.CarroCombustao;
 import br.com.fiapcarro.model.Motor;
 
 public class SistemaPrincipal {
 
     public static void main(String[] args) {
-        System.out.println("--- FiapCarro: Inicializando ---");
+        System.out.println("--- FiapCarro: Herança ---");
 
-        // 1. Criamos primeiro o objeto associado (o "ator" independente)
+        // Um carro ELÉTRICO (é UM Carro, com atributo exclusivo)
+        Motor motorEletrico = new Motor(150, "Elétrico");
+        CarroEletrico tesla = new CarroEletrico("Tesla", "Model 3", 2024, motorEletrico, 500);
+
+        // Um carro a COMBUSTÃO
         Motor motorFlex = new Motor(110, "Flex");
+        CarroCombustao gol = new CarroCombustao("Volkswagen", "Gol", 2022, motorFlex, 55);
 
-        // 2. Criamos o Carro, ASSOCIANDO o Motor a ele
-        Carro meuCarro = new Carro("Volkswagen", "Gol", 2022, motorFlex);
+        // --- Elétrico: usa atributo próprio + métodos HERDADOS da mãe Carro ---
+        System.out.println("\n--- Elétrico ---");
+        System.out.println(tesla.getMarca() + " " + tesla.getModelo()
+                + " | Autonomia: " + tesla.getAutonomiaKm() + " km");
+        tesla.acelerar(80);        // método herdado de Carro
+        tesla.getMotor().ligar();  // associação herdada de Carro
 
-        // 3. A mágica: navegamos do Carro -> Motor -> dados do Motor
-        System.out.println("\n--- Ficha do carro ---");
-        System.out.println("Modelo: " + meuCarro.getMarca() + " " + meuCarro.getModelo());
-        System.out.println("Potência: " + meuCarro.getMotor().getPotencia() + " cv");
-        System.out.println("Combustível: " + meuCarro.getMotor().getCombustivel());
-
-        // 4. Também acessamos o COMPORTAMENTO do objeto associado
-        meuCarro.getMotor().ligar();
-
-        // Comportamentos do próprio Carro continuam funcionando
-        System.out.println("\n[Comportamentos]");
-        meuCarro.acelerar(60);
-        meuCarro.frear(20);
+        // --- Combustão: mesmo esquema ---
+        System.out.println("\n--- Combustão ---");
+        System.out.println(gol.getMarca() + " " + gol.getModelo()
+                + " | Tanque: " + gol.getTanqueLitros() + " L");
+        gol.acelerar(50);          // método herdado de Carro
     }
 }

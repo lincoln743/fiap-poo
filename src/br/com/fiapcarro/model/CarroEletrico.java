@@ -1,0 +1,19 @@
+package br.com.fiapcarro.model;
+
+// Aula 6: Herança. CarroEletrico É UM Carro (herda tudo dele via 'extends').
+public class CarroEletrico extends Carro {
+    // Atributo EXCLUSIVO do carro elétrico (um carro a combustão não tem)
+    private int autonomiaKm; // quilômetros que roda com uma carga
+
+    public CarroEletrico(String marca, String modelo, int ano, Motor motor, int autonomiaKm) {
+        // super() chama o construtor da mãe (Carro) para inicializar o que é dela
+        super(marca, modelo, ano, motor);
+        // aqui inicializamos o que é exclusivo da filha
+        this.autonomiaKm = autonomiaKm;
+        System.out.println("Tipo: Elétrico | Autonomia: " + this.autonomiaKm + " km");
+    }
+
+    public int getAutonomiaKm() {
+        return autonomiaKm;
+    }
+}

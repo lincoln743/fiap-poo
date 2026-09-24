@@ -1,39 +1,25 @@
-## Estrutura da classe
+## Herança: Carro como superclasse (Aula 6)
 
-Atributos — todos `private` (encapsulamento):
+O `Carro` virou a **superclasse** (mãe). Dois subtipos herdam dele com `extends`, ganham tudo o que o `Carro` tem (marca, modelo, ano, velocidade, motor, `acelerar`/`frear`) e acrescentam o que é exclusivo:
 
-| Atributo     | Tipo     | Descrição                                         |
-|--------------|----------|---------------------------------------------------|
-| `marca`      | `String` | Fabricante (imutável)                             |
-| `modelo`     | `String` | Modelo (imutável)                                 |
-| `ano`        | `int`    | Ano de fabricação (imutável)                      |
-| `velocidade` | `int`    | Estado atual em km/h (nasce em 0)                 |
-| `motor`      | `Motor`  | Associação: o Carro **TEM UM** Motor              |
+| Subclasse         | Herda de | Atributo exclusivo      |
+|-------------------|----------|-------------------------|
+| `CarroEletrico`   | `Carro`  | `autonomiaKm` (int, km) |
+| `CarroCombustao`  | `Carro`  | `tanqueLitros` (int, L) |
 
-## Associação: o Carro TEM UM Motor (Aula 5)
-
-Em vez de guardar só tipos simples, o `Carro` guarda outro objeto — um `Motor`, que tem seus próprios dados (`potencia`, `combustivel`) e comportamento (`ligar()`). O nome do atributo (`motor`) indica o papel que o objeto desempenha dentro do carro.
+O construtor de cada filha chama `super(marca, modelo, ano, motor)` para inicializar a parte que é da mãe, e depois inicializa o seu próprio atributo.
 
 ```java
-Motor motorFlex = new Motor(110, "Flex");
-Carro meuCarro = new Carro("Volkswagen", "Gol", 2022, motorFlex);
+Motor motorEletrico = new Motor(150, "Elétrico");
+CarroEletrico tesla = new CarroEletrico("Tesla", "Model 3", 2024, motorEletrico, 500);
 
-// Navegando do Carro até o Motor:
-meuCarro.getMotor().getPotencia();   // 110
-meuCarro.getMotor().ligar();          // Motor Flex de 110 cv ligado.
+tesla.acelerar(80);        // método herdado de Carro
+tesla.getAutonomiaKm();    // atributo exclusivo da filha
 ```
 
-## Por que passar o objeto inteiro (e não só uma String)?
+## Por que a filha não altera os atributos private da mãe diretamente?
 
-Se o `Carro` guardasse apenas `"110 cv Flex"` como texto, ele teria a informação, mas não conseguiria **agir** sobre o motor (ligar, no futuro consultar consumo, trocar estado). Passando o objeto `Motor` inteiro, o carro acessa tanto os dados quanto os comportamentos — e qualquer mudança no motor é enxergada pelo carro, porque ambos apontam para o mesmo objeto na memória (passagem por referência).
-
-## Construtor
-
-`Carro(String marca, String modelo, int ano, Motor motor)` — o carro só nasce com os quatro dados. (Isso passa do limite ideal de 3 parâmetros do Clean Code; num projeto maior, o padrão Builder resolveria isso — assunto de aulas futuras.)
-
-## Como executar
-
-Abra o projeto no Eclipse e rode `SistemaPrincipal` (`Run As` → `Java Application`).
+Porque `private` significa "só esta classe". Nem a subclasse escapa disso — é o **encapsulamento** (Aula 3) sendo respeitado. A filha só chega aos dados da mãe pelo `super()` (no nascimento) ou pelos getters/setters públicos. Assim, toda validação que mora na mãe continua valendo: se a filha pudesse escrever `this.marca` direto, ela poderia burlar as regras do construtor da mãe e deixar o objeto inconsistente. (Se quiséssemos dar acesso direto à filha, usaríamos `protected` — mas isso amplia a exposição, então só quando fizer sentido.)
 
 ## Estrutura de pastas
 
@@ -43,7 +29,9 @@ FiapCarro/
 └── src/
     ├── module-info.java
     └── br/com/fiapcarro/
-        ├── model/Carro.java
+        ├── model/Carro.java            (superclasse)
+        ├── model/CarroEletrico.java    (subclasse)
+        ├── model/CarroCombustao.java   (subclasse)
         ├── model/Motor.java
         └── main/SistemaPrincipal.java
 ```
