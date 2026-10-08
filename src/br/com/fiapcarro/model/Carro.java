@@ -80,6 +80,13 @@ public class Carro {
         return motor;
     }
 
+    // ---------- Polimorfismo (Aula 7): o CONTRATO ----------
+    // A mãe define o método. A resposta aqui é genérica; cada filha sobrescreve
+    // com a sua própria conta usando @Override.
+    public String calcularAutonomia() {
+        return "Autonomia não definida para um carro genérico.";
+    }
+
     // ---------- Setters PRIVADOS (engrenagem interna de validação) ----------
 
     private void setMarca(String marca) {

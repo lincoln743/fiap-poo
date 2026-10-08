@@ -16,4 +16,11 @@ public class CarroEletrico extends Carro {
     public int getAutonomiaKm() {
         return autonomiaKm;
     }
+
+    // Aula 7: Sobrescrita. O elétrico calcula a autonomia do jeito dele:
+    // a carga da bateria já é dada em km.
+    @Override
+    public String calcularAutonomia() {
+        return "Autonomia: " + this.autonomiaKm + " km com uma carga da bateria.";
+    }
 }

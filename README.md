@@ -1,3 +1,27 @@
+## Polimorfismo de sobrescrita (Aula 7)
+
+Todas as subclasses sabem responder ao mesmo comando `calcularAutonomia()`, cada uma do seu jeito. A mãe `Carro` define o método (o **contrato**) com uma resposta genérica; cada filha o **sobrescreve** com `@Override` e a sua própria conta.
+
+![Diagrama UML - Polimorfismo](docs/diagrama_carro_aula7.png)
+
+| Classe            | `calcularAutonomia()` retorna                                  |
+|-------------------|----------------------------------------------------------------|
+| `Carro` (mãe)     | mensagem genérica (contrato)                                   |
+| `CarroEletrico`   | a `autonomiaKm` direto (a carga da bateria já é dada em km)     |
+| `CarroCombustao`  | `tanqueLitros` × consumo (12 km/l)                             |
+
+```java
+List<Carro> frota = new ArrayList<>();
+frota.add(new CarroEletrico("Tesla", "Model 3", 2024, new Motor(150, "Elétrico"), 500));
+frota.add(new CarroCombustao("Volkswagen", "Gol", 2022, new Motor(110, "Flex"), 55));
+
+for (Carro carro : frota) {
+    System.out.println(carro.calcularAutonomia()); // mesmo comando, resultados diferentes
+}
+```
+
+O Java escolhe a conta certa pelo objeto real, sem nenhum `if` de tipo — essa é a mágica do polimorfismo.
+
 ## Herança: Carro como superclasse (Aula 6)
 
 O `Carro` virou a **superclasse** (mãe). Dois subtipos herdam dele com `extends`, ganham tudo o que o `Carro` tem (marca, modelo, ano, velocidade, motor, `acelerar`/`frear`) e acrescentam o que é exclusivo:
@@ -26,6 +50,8 @@ Porque `private` significa "só esta classe". Nem a subclasse escapa disso — �
 ```
 FiapCarro/
 ├── Carro.asta                (modelo UML — feito no Astah)
+├── docs/
+│   └── diagrama_carro_aula7.png   (diagrama de referência)
 └── src/
     ├── module-info.java
     └── br/com/fiapcarro/
