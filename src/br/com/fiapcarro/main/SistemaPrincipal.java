@@ -12,22 +12,25 @@ import java.util.List;
 public class SistemaPrincipal {
 
     public static void main(String[] args) {
-        System.out.println("--- FiapCarro: Polimorfismo ---");
+        System.out.println("--- FiapCarro: Classes Abstratas ---");
 
-        // 1. Criamos uma lista da SUPERCLASSE. Ela aceita qualquer herdeiro!
+        // TESTE DE COMPILAÇÃO: Carro agora é abstract.
+        // Descomente a linha abaixo para ver o erro: "Carro is abstract; cannot be instantiated".
+        // Carro carroGenerico = new Carro("Marca", "Modelo", 2024, new Motor(100, "Flex"));
+
+        // 1. Lista do tipo da SUPERCLASSE abstrata. Ela aceita qualquer filha concreta.
         List<Carro> frota = new ArrayList<>();
 
-        // 2. Colocamos carros de tipos diferentes na mesma frota
+        // 2. Os OBJETOS reais são sempre das filhas concretas (nunca da mãe abstrata).
         frota.add(new CarroEletrico("Tesla", "Model 3", 2024, new Motor(150, "Elétrico"), 500));
         frota.add(new CarroCombustao("Volkswagen", "Gol", 2022, new Motor(110, "Flex"), 55));
 
         // 3. A MÁGICA: o MESMO comando produz resultados diferentes para cada carro.
-        System.out.println("\n--- RELATÓRIO DE AUTONOMIA DA FROTA ---");
+        System.out.println("\n--- RELATÓRIO DA FROTA ---");
         for (Carro carro : frota) {
             System.out.println("Carro: " + carro.getMarca() + " " + carro.getModelo());
-            // O Java escolhe sozinho a conta certa: se for elétrico, usa a do elétrico;
-            // se for combustão, usa a do combustão. Sem nenhum 'if' de tipo.
-            System.out.println(carro.calcularAutonomia());
+            carro.exibirTipo();                        // método abstrato implementado em cada filha
+            System.out.println(carro.calcularAutonomia()); // idem
             System.out.println("----------------------------------------");
         }
     }

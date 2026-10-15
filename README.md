@@ -1,3 +1,25 @@
+## Classe abstrata: o molde invisível (Aula 8)
+
+`Carro` virou uma **classe abstrata** (`public abstract class Carro`). No mundo real ninguém tem um "carro genérico" — todo carro é de algum tipo (elétrico, a combustão). Por isso o `Carro` deixou de poder ser instanciado: ele é só o **molde** que as filhas concretas seguem.
+
+![Diagrama UML - Classe Abstrata](docs/diagrama_carro_aula8.png)
+
+No diagrama, o nome `Carro` e os métodos `calcularAutonomia()`/`exibirTipo()` aparecem em *itálico* — a convenção UML para indicar "abstrato".
+
+```java
+// Carro c = new Carro(...);  // NÃO COMPILA: "Carro is abstract; cannot be instantiated"
+Carro tesla = new CarroEletrico("Tesla", "Model 3", 2024, new Motor(150, "Elétrico"), 500); // OK
+```
+
+A mãe agora tem dois **métodos abstratos** — sem corpo, terminam em `;` — que **obrigam** toda filha concreta a implementar:
+
+| Método abstrato (em `Carro`)   | `CarroEletrico` implementa         | `CarroCombustao` implementa          |
+|--------------------------------|------------------------------------|--------------------------------------|
+| `exibirTipo() : void`          | "Sou um Carro Elétrico."           | "Sou um Carro a Combustão."          |
+| `calcularAutonomia() : String` | pela `autonomiaKm`                 | `tanqueLitros` × consumo (12 km/l)   |
+
+Se uma filha esquecer de implementar um método abstrato, o código **não compila** — o compilador garante o contrato. Métodos abstratos são implicitamente `public`.
+
 ## Polimorfismo de sobrescrita (Aula 7)
 
 Todas as subclasses sabem responder ao mesmo comando `calcularAutonomia()`, cada uma do seu jeito. A mãe `Carro` define o método (o **contrato**) com uma resposta genérica; cada filha o **sobrescreve** com `@Override` e a sua própria conta.
@@ -51,13 +73,14 @@ Porque `private` significa "só esta classe". Nem a subclasse escapa disso — �
 FiapCarro/
 ├── Carro.asta                (modelo UML — feito no Astah)
 ├── docs/
-│   └── diagrama_carro_aula7.png   (diagrama de referência)
+│   ├── diagrama_carro_aula7.png   (polimorfismo)
+│   └── diagrama_carro_aula8.png   (classe abstrata)
 └── src/
     ├── module-info.java
     └── br/com/fiapcarro/
-        ├── model/Carro.java            (superclasse)
-        ├── model/CarroEletrico.java    (subclasse)
-        ├── model/CarroCombustao.java   (subclasse)
+        ├── model/Carro.java            (superclasse ABSTRATA)
+        ├── model/CarroEletrico.java    (subclasse concreta)
+        ├── model/CarroCombustao.java   (subclasse concreta)
         ├── model/Motor.java
         └── main/SistemaPrincipal.java
 ```

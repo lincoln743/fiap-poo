@@ -28,4 +28,10 @@ public class CarroCombustao extends Carro {
         return "Autonomia: " + kmTotal + " km (tanque de " + this.tanqueLitros
                 + " L a " + CONSUMO_KM_POR_LITRO + " km/l).";
     }
+
+    // Aula 8: implementação OBRIGATÓRIA do método abstrato da mãe.
+    @Override
+    public void exibirTipo() {
+        System.out.println("Sou um Carro a Combustão.");
+    }
 }

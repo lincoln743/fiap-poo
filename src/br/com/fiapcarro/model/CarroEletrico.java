@@ -23,4 +23,10 @@ public class CarroEletrico extends Carro {
     public String calcularAutonomia() {
         return "Autonomia: " + this.autonomiaKm + " km com uma carga da bateria.";
     }
+
+    // Aula 8: implementação OBRIGATÓRIA do método abstrato da mãe.
+    @Override
+    public void exibirTipo() {
+        System.out.println("Sou um Carro Elétrico.");
+    }
 }

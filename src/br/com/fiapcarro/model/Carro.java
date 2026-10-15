@@ -2,9 +2,11 @@ package br.com.fiapcarro.model;
 
 import java.time.Year;
 
-// Aula 5: Associação ("Tem-Um" / HAS-A).
-// Além dos dados simples, o Carro TEM UM Motor: guarda outro objeto dentro dele.
-public class Carro {
+// Aula 8: Classe Abstrata (o molde invisível).
+// 'Carro' é um conceito genérico: no mundo real ninguém tem um "carro" que não
+// seja elétrico, a combustão, etc. Por isso a classe é abstract — NÃO pode ser
+// instanciada com 'new Carro(...)', só serve de molde para as filhas concretas.
+public abstract class Carro {
     // Atributos simples (sempre privados)
     private String marca;
     private String modelo;
@@ -80,12 +82,16 @@ public class Carro {
         return motor;
     }
 
-    // ---------- Polimorfismo (Aula 7): o CONTRATO ----------
-    // A mãe define o método. A resposta aqui é genérica; cada filha sobrescreve
-    // com a sua própria conta usando @Override.
-    public String calcularAutonomia() {
-        return "Autonomia não definida para um carro genérico.";
-    }
+    // ---------- Métodos ABSTRATOS (Aula 8): o CONTRATO sem corpo ----------
+    // Não têm chaves {} — terminam com ';'. A mãe não sabe COMO responder,
+    // então OBRIGA toda filha concreta a implementar. Se uma filha esquecer,
+    // o código não compila (o compilador é seu amigo).
+
+    // Cada tipo de carro calcula a autonomia do seu jeito.
+    public abstract String calcularAutonomia();
+
+    // Cada tipo de carro se identifica do seu jeito.
+    public abstract void exibirTipo();
 
     // ---------- Setters PRIVADOS (engrenagem interna de validação) ----------
 
