@@ -1,3 +1,30 @@
+## Interface: o contrato de comportamento (Aula 9)
+
+Uma **interface** define *o que* uma classe deve saber fazer, não *como*. É um contrato puro (só assinaturas, sem código) que classes de **hierarquias diferentes** podem assinar — algo que a herança simples não permite.
+
+![Diagrama UML - Interface](docs/diagrama_carro_aula9.png)
+
+A interface `Recarregavel` tem o método `recarregar(int)` e as constantes `CARGA_MINIMA`/`CARGA_MAXIMA`. Duas classes sem parentesco a implementam:
+
+| Classe           | Hierarquia                        | Como implementa `recarregar()`        |
+|------------------|-----------------------------------|---------------------------------------|
+| `CarroEletrico`  | `extends Carro` + `implements`    | carrega a bateria do carro            |
+| `Celular`        | nenhuma mãe, só `implements`      | carrega a bateria do celular          |
+
+```java
+// Polimorfismo de interface: carro e celular tratados pelo mesmo contrato.
+Recarregavel[] recarregaveis = { tesla, iphone };
+for (Recarregavel r : recarregaveis) {
+    r.recarregar(85); // mesmo método, comportamentos diferentes
+}
+
+tesla  instanceof Carro;         // true  — é um carro
+tesla  instanceof Recarregavel;  // true  — E também é recarregável (múltiplos tipos)
+iphone instanceof Recarregavel;  // true  — recarregável sem ser carro
+```
+
+Na interface, métodos são implicitamente `public abstract` e constantes são `public static final`. No diagrama, a interface aparece com `<<interface>>` e a ligação com quem a implementa é uma **linha tracejada com triângulo vazado** (realização).
+
 ## Classe abstrata: o molde invisível (Aula 8)
 
 `Carro` virou uma **classe abstrata** (`public abstract class Carro`). No mundo real ninguém tem um "carro genérico" — todo carro é de algum tipo (elétrico, a combustão). Por isso o `Carro` deixou de poder ser instanciado: ele é só o **molde** que as filhas concretas seguem.
@@ -74,13 +101,16 @@ FiapCarro/
 ├── Carro.asta                (modelo UML — feito no Astah)
 ├── docs/
 │   ├── diagrama_carro_aula7.png   (polimorfismo)
-│   └── diagrama_carro_aula8.png   (classe abstrata)
+│   ├── diagrama_carro_aula8.png   (classe abstrata)
+│   └── diagrama_carro_aula9.png   (interface)
 └── src/
     ├── module-info.java
     └── br/com/fiapcarro/
         ├── model/Carro.java            (superclasse ABSTRATA)
-        ├── model/CarroEletrico.java    (subclasse concreta)
+        ├── model/CarroEletrico.java    (subclasse concreta + implements Recarregavel)
         ├── model/CarroCombustao.java   (subclasse concreta)
         ├── model/Motor.java
+        ├── model/Recarregavel.java     (INTERFACE)
+        ├── model/Celular.java          (implements Recarregavel, outra hierarquia)
         └── main/SistemaPrincipal.java
 ```
